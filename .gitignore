@@ -1,0 +1,13 @@
+*.svn
+*.db
+*.idea
+*.DS_Store
+*npm-debug.log
+dist
+node_modules
+dist.txt
+storybook-static
+yarn-error.log
+coverage
+coverage/*
+debug.log

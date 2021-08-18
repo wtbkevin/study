@@ -6,25 +6,109 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <style>
+        .acitve {
+            color: red;
+        }
+    </style>
 </head>
 <body>
     <!-- 宿主文件 -->
     <div id="app">
-        {{title}}
+        <h2 :title="title">
+            {{title}}
+        </h2>
+        <!-- 用户输入 -->
+        <p>
+            <input type="text" v-model="course" v-on:keydown.enter='addCourse'>
+            <button @click='addCourse'>新增</button>
+            <button @click='removeCourses'>清空</button>
+            {{course}}
+        </p>
+        <!-- 条件渲染 -->
+        <p v-if="courses.length === 0">没有任何课程信息</p>
+        <!-- 列表渲染 -->
+        <!-- <div v-for='c in courses' :key='c' :class='{acitve: selectedCourse === c}' @click="selectedCourse = c">
+            {{c}}
+        </div> -->
+        <!-- style -->
+        <div class="course-list" v-else>
+            <div v-for='c in courses' :key='c' :style="{color: selectedCourseStyle === c ? 'red' : ''}" @click="selectedCourseStyle = c">
+                {{c}}
+            </div>
+        </div>
+        <!-- 商品总数 -->
+        <p>
+            <!-- 表达式 -->
+            课程总数：{{courses.length + '门'}}
+            <!-- 函数 --><br />
+            课程总数：{{total}}
+            <!-- 监听器 --><br />
+            课程总数：{{totalCount}}
+        </p>
     </div>
     <script>
+        // 模拟异步数据的调用
+        function getCourses() {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    resolve(['web全栈', 'web高级']);
+                }, 2e3);
+            })
+        }
         // 1.创建vue实例
         const app = new Vue({
             el: '#app',
             data() {
                 return {
-                    title: 'no, vue!'
+                    title: 'hello, vue!',
+                    course: '双向绑定',
+                    selectedCourse: '',
+                    selectedCourseStyle: '',
+                    courses: [],
+                    totalCount: 0,
                 }
-            }
+            },
+            // 组件实例已创建，由于未挂载，dom不存在
+            async created () {
+                const courses = await getCourses();
+                this.courses = courses;
+            },
+            // dom已经存在
+            mounted () {},
+            methods: {
+                addCourse() {
+                    // 1.添加course到数组
+                    this.courses.push(this.course);
+                },
+                removeCourses() {
+                    // 清空数组
+                    this.courses = [];
+                    // this.courses.length = 0;  //这个是不行的
+                }
+            },
+            computed: {
+                total() {
+                    // 计算属性是有缓存性的；如果值没有发生变化，则页面不会重新渲染
+                    return this.courses.length + '门'
+                }
+            },
+            // 默认情况下watch初始化时不执行
+            // watch: {
+            //     courses(newValue, oldValue) {
+            //         this.totalCount = newValue.length + '门'
+            //     }
+            // },
+            watch: {
+                courses: {
+                    immediate: true, // 立即执行一次
+                    deep: true,  // 深层次监控
+                    handler(newValue, oldValue) {
+                        this.totalCount = newValue.length + '门'
+                    }
+                }
+            },
         })
-        setTimeout(() => {
-            app.title = 'hello, vue!'
-        }, 1e3)
     </script>
 </body>
 </html>

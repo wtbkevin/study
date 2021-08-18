@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <style>
+        .acitve {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <!-- 宿主文件 -->
+    <div id="app">
+    </div>
+    <script>
+        // 1.创建vue实例
+        const app = new Vue({
+            el: '#app',
+            data() {
+                return {
+                    title: 'hello, vue!',
+                    course: '双向绑定',
+                    selectedCourse: '',
+                    selectedCourseStyle: '',
+                    courses: ['web全栈', 'web高级']
+                }
+            },
+            methods: {
+                addCourse() {
+                    // 1.添加course到数组
+                    this.courses.push(this.course);
+                },
+                removeCourses() {
+                    // 清空数组
+                    this.courses = [];
+                    // this.courses.length = 0;  //这个是不行的
+                }
+            },
+            render() {
+                with(this) {
+                    return _c('div',{attrs:{"id":"app"}},[_c('h2',{attrs:{"title":title}},[_v("\n            "+_s(title)+"\n        ")]),_v(" "),_c('p',[_c('input',{directives:[{name:"model",rawName:"v-model",value:(course),expression:"course"}],attrs:{"type":"text"},domProps:{"value":(course)},on:{"keydown":function($event){if(!$event.type.indexOf('key')&&_k($event.keyCode,"enter",13,$event.key,"Enter"))return null;return addCourse.apply(null, arguments)},"input":function($event){if($event.target.composing)return;course=$event.target.value}}}),_v(" "),_c('button',{on:{"click":addCourse}},[_v("新增")]),_v(" "),_c('button',{on:{"click":removeCourses}},[_v("清空")]),_v("\n            "+_s(course)+"\n        ")]),_v(" "),(courses.length === 0)?_c('p',[_v("没有任何课程信息")]):_c('div',{staticClass:"course-list"},_l((courses),function(c){return _c('div',{key:c,style:({color: selectedCourseStyle === c ? 'red' : ''}),on:{"click":function($event){selectedCourseStyle = c}}},[_v("\n                "+_s(c)+"\n            ")])}),0)])
+                }
+            }
+        })
+    </script>
+</body>
+</html>
